@@ -11,25 +11,21 @@
 # [*my_class*]
 #   Name of a custom class to autoload to manage module's customizations
 #   If defined, fail2ban class will automatically "include $my_class"
-#   Can be defined also by the (top scope) variable $fail2ban_myclass
 #
 # [*source*]
 #   Sets the content of source parameter for main configuration file
 #   (fail2ban.local)
 #   If defined, fail2ban main config file will have the param: source => $source
-#   Can be defined also by the (top scope) variable $fail2ban_source
 #
 # [*source_dir*]
 #   If defined, the whole fail2ban.configuration directory content is retrieved
 #   recursively from the specified source
 #   (source => $source_dir , recurse => true)
-#   Can be defined also by the (top scope) variable $fail2ban_source_dir
 #
 # [*source_dir_purge*]
 #   If set to true (default false) the existing configuration directory is
 #   mirrored with the content retrieved from source_dir
 #   (source => $source_dir , recurse => true , purge => true)
-#   Can be defined also by the (top scope) variable $fail2ban_source_dir_purge
 #
 # [*source_dir_owner*]
 #   Configuration directory owner
@@ -43,7 +39,6 @@
 #   Sets the path to the template to use as content for main configuration file
 #   If defined, fail2ban main config file has: content => content("$template")
 #   Note source and template parameters are mutually exclusive: don't use both
-#   Can be defined also by the (top scope) variable $fail2ban_template
 #
 # [*ignoreip*]
 #   Fail2ban will not ban a host which matches an address in this list.
@@ -131,7 +126,6 @@
 #
 # [*options*]
 #   A hash of custom options to be used in templates for arbitrary settings.
-#   Can be defined also by the (top scope) variable $fail2ban_options
 #
 # [*service_autorestart*]
 #   Automatically restarts the fail2ban service when there is a change in
@@ -146,56 +140,21 @@
 #
 # [*absent*]
 #   Set to 'true' to remove package(s) installed by module
-#   Can be defined also by the (top scope) variable $fail2ban_absent
 #
 # [*disable*]
 #   Set to 'true' to disable service(s) managed by module
-#   Can be defined also by the (top scope) variable $fail2ban_disable
 #
 # [*disableboot*]
 #   Set to 'true' to disable service(s) at boot, without checks if it's running
 #   Use this when the service is managed by a tool like a cluster software
-#   Can be defined also by the (top scope) variable $fail2ban_disableboot
-#
-# [*monitor*]
-#   Set to 'true' to enable monitoring of the services provided by the module
-#   Can be defined also by the (top scope) variables $fail2ban_monitor
-#   and $monitor
-#
-# [*monitor_tool*]
-#   Define which monitor tools (ad defined in Example42 monitor module)
-#   you want to use for fail2ban checks
-#   Can be defined also by the (top scope) variables $fail2ban_monitor_tool
-#   and $monitor_tool
-#
-# [*monitor_target*]
-#   The Ip address or hostname to use as a target for monitoring tools.
-#   Default is the fact $ipaddress
-#   Can be defined also by the (top scope) variables $fail2ban_monitor_target
-#   and $monitor_target
-#
-# [*puppi*]
-#   Set to 'true' to enable creation of module data files that are used by puppi
-#   Can be defined also by the (top scope) variables $fail2ban_puppi and $puppi
-#
-# [*puppi_helper*]
-#   Specify the helper to use for puppi commands. The default for this module
-#   is specified in params.pp and is generally a good choice.
-#   You can customize the output of puppi commands for this module using another
-#   puppi helper. Use the define puppi::helper to create a new custom helper
-#   Can be defined also by the (top scope) variables $fail2ban_puppi_helper
-#   and $puppi_helper
 #
 # [*debug*]
 #   Set to 'true' to enable modules debugging
-#   Can be defined also by the (top scope) variables $fail2ban_debug and $debug
 #
 # [*audit_only*]
 #   Set to 'true' if you don't intend to override existing configuration files
 #   and want to audit the difference between existing files and the ones
 #   managed by Puppet.
-#   Can be defined also by the (top scope) variables $fail2ban_audit_only
-#   and $audit_only
 #
 # [*noops*]
 #   Set noop metaparameter to true for all the resources managed by the module.
@@ -220,13 +179,6 @@
 # [*process*]
 #   The name of fail2ban process
 #
-# [*process_args*]
-#   The name of fail2ban arguments. Used by puppi and monitor.
-#   Used only in case the fail2ban process name is generic (java, ruby...)
-#
-# [*process_user*]
-#   The name of the user fail2ban runs with. Used by puppi and monitor.
-#
 # [*config_dir*]
 #   Main configuration directory. Used by puppi
 #
@@ -244,15 +196,6 @@
 #
 # [*config_file_init*]
 #   Path of configuration file sourced by init script
-#
-# [*pid_file*]
-#   Path of pid file. Used by monitor
-#
-# [*data_dir*]
-#   Path of application data directory. Used by puppi
-#
-# [*log_dir*]
-#   Base logs directory. Used by puppi
 #
 # [*log_level*]
 #   Set the log level output.
@@ -282,80 +225,64 @@
 #   Javier Bertoli <javier@netmanagers.com.ar/>
 #
 class fail2ban (
-  $my_class              = params_lookup( 'my_class' ),
-  $source                = params_lookup( 'source' ),
-  $source_dir            = params_lookup( 'source_dir' ),
-  $source_dir_purge      = params_lookup( 'source_dir_purge' ),
-  $source_dir_owner      = params_lookup( 'source_dir_owner' ),
-  $source_dir_group      = params_lookup( 'source_dir_group' ),
-  $template              = params_lookup( 'template' ),
-  $service_autorestart   = params_lookup( 'service_autorestart' , 'global' ),
-  $options               = params_lookup( 'options' ),
-  $version               = params_lookup( 'version' ),
-  $absent                = params_lookup( 'absent' ),
-  $disable               = params_lookup( 'disable' ),
-  $disableboot           = params_lookup( 'disableboot' ),
-  $monitor               = params_lookup( 'monitor' , 'global' ),
-  $monitor_tool          = params_lookup( 'monitor_tool' , 'global' ),
-  $monitor_target        = params_lookup( 'monitor_target' , 'global' ),
-  $puppi                 = params_lookup( 'puppi' , 'global' ),
-  $puppi_helper          = params_lookup( 'puppi_helper' , 'global' ),
-  $firewall              = params_lookup( 'firewall' , 'global' ),
-  $firewall_tool         = params_lookup( 'firewall_tool' , 'global' ),
-  $firewall_src          = params_lookup( 'firewall_src' , 'global' ),
-  $firewall_dst          = params_lookup( 'firewall_dst' , 'global' ),
-  $debug                 = params_lookup( 'debug' , 'global' ),
-  $audit_only            = params_lookup( 'audit_only' , 'global' ),
-  $noops                 = params_lookup( 'noops' ),
-  $package               = params_lookup( 'package' ),
-  $service               = params_lookup( 'service' ),
-  $service_status        = params_lookup( 'service_status' ),
-  $process               = params_lookup( 'process' ),
-  $process_args          = params_lookup( 'process_args' ),
-  $process_user          = params_lookup( 'process_user' ),
-  $config_dir            = params_lookup( 'config_dir' ),
-  $config_file           = params_lookup( 'config_file' ),
-  $config_file_mode      = params_lookup( 'config_file_mode' ),
-  $config_file_owner     = params_lookup( 'config_file_owner' ),
-  $config_file_group     = params_lookup( 'config_file_group' ),
-  $config_file_init      = params_lookup( 'config_file_init' ),
-  $pid_file              = params_lookup( 'pid_file' ),
-  $data_dir              = params_lookup( 'data_dir' ),
-  $log_dir               = params_lookup( 'log_dir' ),
-  $log_file              = params_lookup( 'log_file' ),
-  $log_level             = params_lookup( 'log_level' ),
-  $socket                = params_lookup( 'socket' ),
-  $ignoreip              = params_lookup( 'ignoreip' ),
-  $bantime               = params_lookup( 'bantime' ),
-  $findtime              = params_lookup( 'findtime' ),
-  $maxretry              = params_lookup( 'maxretry' ),
-  $backend               = params_lookup( 'backend' ),
-  $mailto                = params_lookup( 'mailto' ),
-  $banaction             = params_lookup( 'banaction' ),
-  $mta                   = params_lookup( 'mta' ),
-  $jails_config          = params_lookup( 'jails_config' ),
-  $jails_protocol        = params_lookup( 'jails_protocol' ),
-  $jails_chain           = params_lookup( 'jails_chain' ),
-  $jails_file            = params_lookup( 'jails_file' ),
-  $jails_file_mode       = params_lookup( 'jails_file_mode' ),
-  $jails_file_owner      = params_lookup( 'jails_file_owner' ),
-  $jails_file_group      = params_lookup( 'jails_file_group' ),
-  $jails                 = params_lookup( 'jails' ),
-  $jails_source          = params_lookup( 'jails_source' ),
-  $jails_template        = params_lookup( 'jails_template' ),
-  $jails_template_header = params_lookup( 'jails_template_header' ),
-  $jails_template_footer = params_lookup( 'jails_template_footer' )
+  $my_class              = $fail2ban::params::my_class,
+  $source                = $fail2ban::params::source,
+  $source_dir            = $fail2ban::params::source_dir,
+  $source_dir_purge      = $fail2ban::params::source_dir_purge,
+  $source_dir_owner      = $fail2ban::params::source_dir_owner,
+  $source_dir_group      = $fail2ban::params::source_dir_group,
+  $template              = $fail2ban::params::template,
+  $service_autorestart   = $fail2ban::params::service_autorestart,
+  $options               = $fail2ban::params::options,
+  $version               = $fail2ban::params::version,
+  $absent                = $fail2ban::params::absent,
+  $disable               = $fail2ban::params::disable,
+  $disableboot           = $fail2ban::params::disableboot,
+  $debug                 = $fail2ban::params::debug,
+  $audit_only            = $fail2ban::params::audit_only,
+  $noops                 = $fail2ban::params::noops,
+  $package               = $fail2ban::params::package,
+  $service               = $fail2ban::params::service,
+  $service_status        = $fail2ban::params::service_status,
+  $process               = $fail2ban::params::process,
+  $config_dir            = $fail2ban::params::config_dir,
+  $config_file           = $fail2ban::params::config_file,
+  $config_file_mode      = $fail2ban::params::config_file_mode,
+  $config_file_owner     = $fail2ban::params::config_file_owner,
+  $config_file_group     = $fail2ban::params::config_file_group,
+  $config_file_init      = $fail2ban::params::config_file_init,
+  $log_file              = $fail2ban::params::log_file,
+  $log_level             = $fail2ban::params::log_level,
+  $socket                = $fail2ban::params::socket,
+  $ignoreip              = $fail2ban::params::ignoreip,
+  $bantime               = $fail2ban::params::bantime,
+  $findtime              = $fail2ban::params::findtime,
+  $maxretry              = $fail2ban::params::maxretry,
+  $backend               = $fail2ban::params::backend,
+  $mailto                = $fail2ban::params::mailto,
+  $banaction             = $fail2ban::params::banaction,
+  $mta                   = $fail2ban::params::mta,
+  $jails_config          = $fail2ban::params::jails_config,
+  $jails_protocol        = $fail2ban::params::jails_protocol,
+  $jails_chain           = $fail2ban::params::jails_chain,
+  $jails_file            = $fail2ban::params::jails_file,
+  $jails_file_mode       = $fail2ban::params::jails_file_mode,
+  $jails_file_owner      = $fail2ban::params::jails_file_owner,
+  $jails_file_group      = $fail2ban::params::jails_file_group,
+  $jails                 = $fail2ban::params::jails,
+  $jails_source          = $fail2ban::params::jails_source,
+  $jails_template        = $fail2ban::params::jails_template,
+  $jails_template_header = $fail2ban::params::jails_template_header,
+  $jails_template_footer = $fail2ban::params::jails_template_footer
   ) inherits fail2ban::params {
 
-  $bool_source_dir_purge=any2bool($source_dir_purge)
-  $bool_service_autorestart=any2bool($service_autorestart)
-  $bool_absent=any2bool($absent)
-  $bool_disable=any2bool($disable)
-  $bool_disableboot=any2bool($disableboot)
-  $bool_monitor=any2bool($monitor)
-  $bool_puppi=any2bool($puppi)
-  $bool_debug=any2bool($debug)
-  $bool_audit_only=any2bool($audit_only)
+  $bool_source_dir_purge=str2bool($source_dir_purge)
+  $bool_service_autorestart=str2bool($service_autorestart)
+  $bool_absent=str2bool($absent)
+  $bool_disable=str2bool($disable)
+  $bool_disableboot=str2bool($disableboot)
+  $bool_debug=str2bool($debug)
+  $bool_audit_only=str2bool($audit_only)
 
   ### Definition of some variables used in the module
   $manage_package = $fail2ban::bool_absent ? {
@@ -390,14 +317,6 @@ class fail2ban (
   $manage_file = $fail2ban::bool_absent ? {
     true    => 'absent',
     default => 'present',
-  }
-
-  if $fail2ban::bool_absent == true
-  or $fail2ban::bool_disable == true
-  or $fail2ban::bool_disableboot == true {
-    $manage_monitor = false
-  } else {
-    $manage_monitor = true
   }
 
   $manage_audit = $fail2ban::bool_audit_only ? {
@@ -521,46 +440,6 @@ class fail2ban (
   if $fail2ban::my_class {
     include $fail2ban::my_class
   }
-
-
-  ### Provide puppi data, if enabled ( puppi => true )
-  if $fail2ban::bool_puppi == true {
-    $classvars=get_class_args()
-    puppi::ze { 'fail2ban':
-      ensure    => $fail2ban::manage_file,
-      variables => $classvars,
-      helper    => $fail2ban::puppi_helper,
-      noop      => $fail2ban::noops,
-    }
-  }
-
-
-  ### Service monitoring, if enabled ( monitor => true )
-  if $fail2ban::bool_monitor == true {
-    if $fail2ban::port != '' {
-      monitor::port { "fail2ban_${fail2ban::protocol}_${fail2ban::port}":
-        protocol => $fail2ban::protocol,
-        port     => $fail2ban::port,
-        target   => $fail2ban::monitor_target,
-        tool     => $fail2ban::monitor_tool,
-        enable   => $fail2ban::manage_monitor,
-        noop     => $fail2ban::noops,
-      }
-    }
-    if $fail2ban::service != '' {
-      monitor::process { 'fail2ban_process':
-        process  => $fail2ban::process,
-        service  => $fail2ban::service,
-        pidfile  => $fail2ban::pid_file,
-        user     => $fail2ban::process_user,
-        argument => $fail2ban::process_args,
-        tool     => $fail2ban::monitor_tool,
-        enable   => $fail2ban::manage_monitor,
-        noop     => $fail2ban::noops,
-      }
-    }
-  }
-
 
   ### Debugging, if enabled ( debug => true )
   if $fail2ban::bool_debug == true {

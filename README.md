@@ -115,37 +115,6 @@ For detailed info about the logic and usage patterns of Example42 modules check 
         }
 
 
-## USAGE - Example42 extensions management 
-* Activate puppi (recommended, but disabled by default)
-
-        class { 'fail2ban':
-          puppi    => true,
-        }
-
-* Activate puppi and use a custom puppi_helper template (to be provided separately with a puppi::helper define ) to customize the output of puppi commands 
-
-        class { 'fail2ban':
-          puppi        => true,
-          puppi_helper => 'myhelper', 
-        }
-
-* Activate automatic monitoring (recommended, but disabled by default). This option requires the usage of Example42 monitor and relevant monitor tools modules
-
-        class { 'fail2ban':
-          monitor      => true,
-          monitor_tool => [ 'nagios' , 'monit' , 'munin' ],
-        }
-
-* Activate automatic firewalling. This option requires the usage of Example42 firewall and relevant firewall tools modules
-
-        class { 'fail2ban':       
-          firewall      => true,
-          firewall_tool => 'iptables',
-          firewall_src  => '10.42.0.0/24',
-          firewall_dst  => $ipaddress_eth0,
-        }
-
-
 ## CONTINUOUS TESTING
 
 Travis {<img src="https://travis-ci.org/netmanagers/puppet-fail2ban.png?branch=master" alt="Build Status" />}[https://travis-ci.org/netmanagers/puppet-fail2ban]

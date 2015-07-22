@@ -34,14 +34,6 @@ class fail2ban::params {
     default                                             => 'fail2ban',
   }
 
-  $process_args = $::operatingsystem ? {
-    default => '',
-  }
-
-  $process_user = $::operatingsystem ? {
-    default => 'fail2ban',
-  }
-
   $config_dir = $::operatingsystem ? {
     default => '/etc/fail2ban',
   }
@@ -90,19 +82,6 @@ class fail2ban::params {
     default                   => '/etc/sysconfig/fail2ban',
   }
 
-  $pid_file = $::operatingsystem ? {
-    /(?i:Debian|Ubuntu|Mint)/ => '/var/run/fail2ban/fail2ban.pid',
-    default                   => '/var/run/fail2ban.pid',
-  }
-
-  $data_dir = $::operatingsystem ? {
-    default => '/etc/fail2ban',
-  }
-
-  $log_dir = $::operatingsystem ? {
-    default => '/var/log/fail2ban',
-  }
-
   $log_file = $::operatingsystem ? {
     default => '/var/log/fail2ban/fail2ban.log',
   }
@@ -143,11 +122,6 @@ class fail2ban::params {
   $disableboot = false
 
   ### General module variables that can have a site or per module default
-  $monitor = false
-  $monitor_tool = ''
-  $monitor_target = $::ipaddress
-  $puppi = false
-  $puppi_helper = 'standard'
   $debug = false
   $audit_only = false
   $noops = undef
