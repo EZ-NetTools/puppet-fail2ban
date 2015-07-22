@@ -67,7 +67,7 @@ class fail2ban::params {
   # "concat" - To build them up using different fragments
   #          - This option, preferred, permits the use of the
   #            fail2ban::jail define
-  $jails_config = ''
+  $jails_config = undef
 
   $jails_file = $::operatingsystem ? {
     default => '/etc/fail2ban/jail.local',
@@ -121,21 +121,21 @@ class fail2ban::params {
   $jails_protocol  = 'tcp'
   $jails_chain     = 'INPUT'
 
-  $jails = ''
-  $jails_source = ''
-  $jails_template = ''
+  $jails = undef
+  $jails_source = undef
+  $jails_template = undef
   $jails_template_header = 'fail2ban/concat/jail.local-header.erb'
   $jails_template_footer = 'fail2ban/concat/jail.local-footer.erb'
 
   # General Settings
-  $my_class = ''
-  $source = ''
-  $template = ''
-  $source_dir = ''
+  $my_class = undef
+  $source = undef
+  $template = undef
+  $source_dir = undef
   $source_dir_purge = false
   $source_dir_owner = 'root'
   $source_dir_group = 'root'
-  $options = ''
+  $options = undef
   $service_autorestart = true
   $version = 'present'
   $absent = false
@@ -144,12 +144,12 @@ class fail2ban::params {
 
   ### General module variables that can have a site or per module default
   $monitor = false
-  $monitor_tool = ''
+  $monitor_tool = undef
   $monitor_target = $::ipaddress
   $puppi = false
   $puppi_helper = 'standard'
   $debug = false
   $audit_only = false
-  $noops = undef
+  $noops = false
 
 }
