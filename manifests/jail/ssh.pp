@@ -1,9 +1,9 @@
 class fail2ban::jail::ssh (
-  $ignoreip  = '',
-  $action    = '',
-  $maxretry  = '',
-  $bantime   = '',
-  $findtime  = '',
+  $ignoreip  = undef,
+  $action    = undef,
+  $maxretry  = undef,
+  $bantime   = undef,
+  $findtime  = undef,
   $port      = 'ssh',
 ) {
   
